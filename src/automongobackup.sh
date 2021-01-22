@@ -43,6 +43,11 @@ set -eo pipefail
 # Unecessary if backup all collections
 # EXCLUDE_COLLECTIONS=""
 
+# Collections to exclude e.g. hangfire
+# DBNAME is required
+# Unecessary if backup all collections
+# EXCLUDE_COLLECTIONS_WITH_PREFIX=""
+
 # Username to access the mongo server e.g. dbuser
 # Unnecessary if authentication is off
 # DBUSERNAME=""
@@ -361,6 +366,13 @@ fi
 if [ "$EXCLUDE_COLLECTIONS" ]; then
   for x in $EXCLUDE_COLLECTIONS; do
     OPT="$OPT --excludeCollection $x"
+  done
+fi
+
+# Do we need to exclude collections with prefix?
+if [ "$EXCLUDE_COLLECTIONS_WITH_PREFIX" ]; then
+  for x in $EXCLUDE_COLLECTIONS_WITH_PREFIX; do
+    OPT="$OPT --excludeCollectionsWithPrefix $x"
   done
 fi
 
