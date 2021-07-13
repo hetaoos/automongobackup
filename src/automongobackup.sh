@@ -43,10 +43,14 @@ set -eo pipefail
 # Unecessary if backup all collections
 # EXCLUDE_COLLECTIONS=""
 
+# DAILY_EXCLUDE_COLLECTIONS=""
+
 # Collections to exclude e.g. hangfire
 # DBNAME is required
 # Unecessary if backup all collections
 # EXCLUDE_COLLECTIONS_WITH_PREFIX=""
+
+# DAILY_EXCLUDE_COLLECTIONS_WITH_PREFIX=""
 
 # Username to access the mongo server e.g. dbuser
 # Unnecessary if authentication is off
@@ -634,6 +638,20 @@ elif [[ $DODAILY = "yes" ]] ; then
         fi
     fi
     FILE="$BACKUPDIR/daily/$DATE.$DOW"
+
+    # Do we need to exclude collections?
+    if [ "$DAILY_EXCLUDE_COLLECTIONS" ]; then
+      for x in $DAILY_EXCLUDE_COLLECTIONS; do
+        OPT="$OPT --excludeCollection $x"
+      done
+    fi
+
+    # Do we need to exclude collections with prefix?
+    if [ "$DAILY_EXCLUDE_COLLECTIONS_WITH_PREFIX" ]; then
+        for x in $DAILY_EXCLUDE_COLLECTIONS_WITH_PREFIX; do
+            OPT="$OPT --excludeCollectionsWithPrefix $x"
+        done
+    fi
 
 # Hourly Backup
 elif [[ $DOHOURLY = "yes" ]] ; then
